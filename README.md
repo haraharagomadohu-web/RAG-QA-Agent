@@ -31,7 +31,8 @@ curl -X POST http://localhost:8000/api/query \
 
 ```mermaid
 graph TD
-    User[ユーザー] --> API[FastAPI REST API]
+    User[ユーザー] --> UI[Streamlit チャットUI]
+    UI --> API[FastAPI REST API]
     API --> Agent[LangGraph Agent]
 
     Agent --> AQ[analyze_query<br/>質問分析・検索クエリ生成]
@@ -49,6 +50,7 @@ graph TD
 
     Agent -.->|トレース| LS[LangSmith]
 
+    style UI fill:#fce4ec
     style Agent fill:#e1f5fe
     style Chroma fill:#f3e5f5
     style Ollama fill:#e8f5e9
@@ -74,6 +76,7 @@ graph TD
 | エージェント | LangGraph (StateGraph) | マルチステップワークフロー |
 | ベクトルDB | Chroma | ドキュメント保存・類似検索 |
 | API | FastAPI | REST APIサーバー |
+| フロントエンド | Streamlit | チャットUI |
 | 監視 | LangSmith | トレース・実行ログ分析 |
 | 設定管理 | pydantic-settings | 型安全な設定・環境変数管理 |
 | 言語 | Python 3.12 | 全実装 |
@@ -104,9 +107,13 @@ python -m scripts.ingest
 
 # 5. APIサーバーの起動
 uvicorn src.api.main:app --reload
+
+# 6. フロントエンドの起動（別ターミナルで）
+streamlit run src/frontend/app.py
 ```
 
-Swagger UI: http://localhost:8000/docs
+- チャットUI: http://localhost:8501
+- Swagger UI: http://localhost:8000/docs
 
 ## APIエンドポイント
 
@@ -150,6 +157,8 @@ src/
 │   ├── state.py                # RAGAgentState（TypedDict）
 │   ├── nodes.py                # 各ノードの処理関数
 │   └── graph.py                # StateGraph構築・条件付きエッジ
+├── frontend/
+│   └── app.py                  # Streamlit チャットUI
 └── api/
     ├── main.py                 # FastAPIアプリ初期化
     ├── routes.py               # エンドポイント定義

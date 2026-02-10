@@ -15,6 +15,10 @@ langsmith>=0.1.0
 fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
 
+# Frontend
+streamlit>=1.38.0
+requests>=2.32.0
+
 # Document processing
 pymupdf>=1.24.0
 
